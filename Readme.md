@@ -1062,11 +1062,9 @@ Potential improvements include:
 
 # 👨‍💻 Author
 
-**Sankar**
+**Sankari**
 
-GitHub:
 
-[https://github.com/sankarirk](https://github.com/sankarirk)
 
 ---
 
