@@ -13,8 +13,6 @@ from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
-app.config["JSON_SORT_KEYS"] = False
-
 
 # ============================================================
 # Logging configuration
@@ -74,11 +72,10 @@ except Exception:
 
 
 # ============================================================
-# Required model features
+# Required API input features
 # ============================================================
 
 REQUIRED_FEATURES = [
-
     "Product_Weight",
     "Product_Sugar_Content",
     "Product_Allocated_Area",
@@ -87,14 +84,13 @@ REQUIRED_FEATURES = [
     "Store_Location_City_Type",
     "Store_Type",
     "Store_Age_Years",
-    "Product_Type_Category",
-    "Product_Id_char"
-
+    "Product_Category",
+    "Product_Family"
 ]
 
 
 # ============================================================
-# Input validation helper
+# Input validation
 # ============================================================
 
 def validate_payload(payload):
@@ -125,7 +121,7 @@ def validate_payload(payload):
 def prepare_input(payload):
     """
     Convert the incoming JSON record into a
-    pandas DataFrame with the same feature
+    pandas DataFrame with exactly the same feature
     names expected by the trained pipeline.
     """
 
@@ -159,11 +155,11 @@ def prepare_input(payload):
             payload["Store_Age_Years"]
         ),
 
-        "Product_Type_Category":
-            str(payload["Product_Type_Category"]),
+        "Product_Category":
+            str(payload["Product_Category"]),
 
-        "Product_Id_char":
-            str(payload["Product_Id_char"])
+        "Product_Family":
+            str(payload["Product_Family"])
 
     }
 
@@ -264,26 +260,21 @@ def predict_sales():
 
             }), 400
 
-
         input_df = prepare_input(
             payload
         )
-
 
         logger.info(
             "Input successfully prepared for prediction."
         )
 
-
         prediction = model.predict(
             input_df
         )[0]
 
-
         logger.info(
             "Prediction completed successfully."
         )
-
 
         return jsonify({
 
@@ -293,7 +284,6 @@ def predict_sales():
                 round(float(prediction), 2)
 
         })
-
 
     except (ValueError, TypeError) as error:
 
@@ -313,7 +303,6 @@ def predict_sales():
                 str(error)
 
         }), 400
-
 
     except Exception as error:
 
