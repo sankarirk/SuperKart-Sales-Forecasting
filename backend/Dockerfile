@@ -10,6 +10,6 @@ RUN pip install --no-cache-dir --upgrade pip && \
 COPY sales_prediction_api.py .
 COPY superkart_sales_pipeline.joblib .
 
-EXPOSE 7860
+EXPOSE 10000
 
-CMD ["gunicorn", "--workers", "2", "--bind", "0.0.0.0:7860", "sales_prediction_api:app"]
+CMD ["sh", "-c", "gunicorn --workers 2 --bind 0.0.0.0:${PORT:-10000} sales_prediction_api:app"]
